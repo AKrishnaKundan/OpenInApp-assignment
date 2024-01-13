@@ -199,7 +199,7 @@ async function sendReply(auth) {
   }
 
 
-  setInterval(()=>authorize().then(sendReply).catch(console.error), 1000);
+  setInterval(()=>authorize().then(sendReply).catch(console.error), Math.floor(Math.random() * (120000 - 45000 + 1)) + 45000);
 })
 
 app.listen(8000, ()=>console.log("listening"))
