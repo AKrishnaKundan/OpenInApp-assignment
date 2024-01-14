@@ -129,7 +129,7 @@ async function sendReply(auth) {
           },
       });
 
-      addLabelAndMoveToLabel(auth)
+      //addLabelAndMoveToLabel(auth)
       
       console.log('Reply sent successfully.');
       } 
