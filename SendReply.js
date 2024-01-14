@@ -2,7 +2,6 @@ const { google } = require('googleapis');
 const hasThreadBeenReplied = require("./CheckThreadReplied");
 
 const sendReply = async(auth)=>{
-    console.log(sendReply);
     try{
     const gmail = google.gmail({ version: 'v1', auth });
 
@@ -60,7 +59,7 @@ const sendReply = async(auth)=>{
     }
     }
     catch(err){
-        console.log(err);
+        return err;
     }
   }
 
