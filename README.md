@@ -9,3 +9,4 @@ Improvements that I am working on:
 
 1. I have to segregate the code into service classes so that the code is more understandable and reusable
 2. I have to add more validations like ignoring no-reply emails etc
+3. I have to do include Error Handling code.
