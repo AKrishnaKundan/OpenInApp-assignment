@@ -13,7 +13,8 @@ const SCOPES = [
     'https://www.googleapis.com/auth/gmail.send',
     "https://www.googleapis.com/auth/gmail.labels",
     "https://mail.google.com/",
-    'https://www.googleapis.com/auth/gmail.modify'
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/pubsub'
   ];
   
 
@@ -62,7 +63,6 @@ async function saveCredentials(client) {
 async function authorize(){
     try{
         let client = await loadSavedCredentialsIfExist();
-        console.log(client);
         if (client) {
             return client;
         }

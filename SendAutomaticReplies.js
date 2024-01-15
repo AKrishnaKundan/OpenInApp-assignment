@@ -1,4 +1,5 @@
 const sendReply = require("./SendReply");
+const watchInbox = require("./webhooks");
 const sendAutomaticReplies = (req, res, next)=>{
     
     let auth = req.auth;
@@ -6,12 +7,13 @@ const sendAutomaticReplies = (req, res, next)=>{
     try {
         req.intervalId = setInterval(async () => {
             try {
-                const response = await sendReply(auth);
+                watchInbox(auth);
+                //const response = await sendReply(auth);
             } catch (err) {
                 //throw err;
                 // return err;
             }
-        }, 10000);
+        }, 30000);
         
     } catch (err) {
         clearInterval(req.intervalId); // Clear the interval here as well
