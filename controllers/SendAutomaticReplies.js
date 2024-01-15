@@ -1,5 +1,5 @@
-const sendReply = require("./SendReply");
-const watchInbox = require("./webhooks");
+const sendReply = require("../utils/SendReply");
+//const watchInbox = require("../webhooks");
 const sendAutomaticReplies = (req, res, next)=>{
     
     let auth = req.auth;
@@ -7,8 +7,8 @@ const sendAutomaticReplies = (req, res, next)=>{
     try {
         req.intervalId = setInterval(async () => {
             try {
-                watchInbox(auth);
-                //const response = await sendReply(auth);
+                //watchInbox(auth);
+                const response = await sendReply(auth);
             } catch (err) {
                 //throw err;
                 // return err;

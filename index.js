@@ -3,8 +3,8 @@ const process = require('process');
 const express = require("express");
 const app = express();
 
-const authorizeUser = require("./AuthorizeUser");
-const sendAutomaticReplies = require("./SendAutomaticReplies");
+const authorizeUser = require("./middlewares/AuthorizeUser");
+const sendAutomaticReplies = require("./controllers/SendAutomaticReplies");
 
 app.use("/", authorizeUser, sendAutomaticReplies);
 
