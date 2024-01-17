@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 const hasThreadBeenReplied = require("./CheckThreadReplied");
+const moveToLabel = require("./MoveToLabel");
 
 const sendReply = async(auth)=>{
     try{
@@ -8,7 +9,7 @@ const sendReply = async(auth)=>{
     // Get the last email in the inbox
     const res = await gmail.users.messages.list({
       userId: 'me',
-      maxResults:5
+      maxResults:1
     });
     const messages = res.data.messages||[];
     if (messages.length > 0) {
@@ -51,6 +52,7 @@ const sendReply = async(auth)=>{
             },
         });
         console.log('Reply sent successfully.');
+        moveToLabel(auth, message.id);
         } 
         else {
           console.log('Thread has been replied to before. No action taken.');

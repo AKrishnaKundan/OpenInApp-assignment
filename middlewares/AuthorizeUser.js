@@ -2,11 +2,11 @@ const fs = require('fs').promises;
 const path = require('path');
 const { google } = require('googleapis');
 
-// The file token.json stores the user's access and refresh tokens and is created automatically when the authorization flow completes for the first time.
-const TOKEN_PATH = path.join(process.cwd(), './data/token.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), './data/credentials.json');
-const { authenticate } = require('@google-cloud/local-auth');
 
+// The file token.json stores the user's access and refresh tokens and is created automatically when the authorization flow completes for the first time.
+const TOKEN_PATH = path.join(process.cwd(), 'data/token.json');
+const CREDENTIALS_PATH = path.join(process.cwd(), 'data/credentials.json');
+const { authenticate } = require('@google-cloud/local-auth');
 // If modifying these scopes, delete token.json.
 const SCOPES = [
     'https://www.googleapis.com/auth/gmail.readonly', 
@@ -65,10 +65,15 @@ async function authorize(){
         if (client) {
             return client;
         }
-        client = await authenticate({
-            scopes: SCOPES,
+        const authOptions = {
             keyfilePath: CREDENTIALS_PATH,
-        });
+            scopes: SCOPES,
+            openAuthUri: {
+                includeGrantedScopes: true,
+                response_type: 'code', // Specify the response_type parameter here
+            }
+        };
+        client = await authenticate(authOptions);
         if (client.credentials) {
             await saveCredentials(client);
         }
