@@ -4,9 +4,13 @@ const express = require("express");
 const app = express();
 
 const authorizeUser = require("./middlewares/AuthorizeUser");
-const sendAutomaticReplies = require("./controllers/SendAutomaticReplies");
+const autoReplyController = require("./controllers/AutoReplyController");
 
-app.use("/", authorizeUser, sendAutomaticReplies);
+app.get("/send/autoReplies", authorizeUser, autoReplyController);
+
+app.use((req, res, next)=>{
+  res.status(404).json({"message":"url not found"})
+})
 
 app.use((err, req, res, next)=>{
   res.status(500).json({"message":"Internal  Server Error"})

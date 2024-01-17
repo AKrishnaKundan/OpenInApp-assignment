@@ -2,34 +2,75 @@ const { google } = require('googleapis');
 const hasThreadBeenReplied = require("./CheckThreadReplied");
 const moveToLabel = require("./MoveToLabel");
 
-const sendReply = async(auth)=>{
+const fetchMessages = async(gmail)=>{
+  try{
+    const response = await gmail.users.messages.list({
+      userId: 'me',
+      maxResults:5
+    });
+    return response.data.messages || [];
+  }
+  catch(err){
+    return err;
+  }
+}
+
+const fetchMail = async(gmail, auth, messageId)=>{
+  try{
+    const email = await gmail.users.messages.get({
+      auth,
+      userId: "me",
+      id: messageId,
+    });
+    return email;
+  }
+  catch(err){
+    return err;
+  }
+}
+
+const findReplyToAddress = (email)=>{
+  try{
+    const from = email.data.payload.headers.find(header => header.name === 'From').value;
+    const replyTo = email.data.payload.headers.find(header => header.name === 'Reply-to').value;
+
+    if (replyTo){
+      return replyTo;
+    }
+    if (from.search("no-reply") !== -1){
+      return from;
+    }
+    return null;
+  }
+  catch(err){
+    return err;
+  }
+}
+
+const sendAutoReply = async(auth)=>{
     try{
     const gmail = google.gmail({ version: 'v1', auth });
 
-    // Get the last email in the inbox
-    const res = await gmail.users.messages.list({
-      userId: 'me',
-      maxResults:1
-    });
-    const messages = res.data.messages||[];
+    const messages = await fetchMessages(gmail);
+
     if (messages.length > 0) {
       for (const message of messages) {
-        const email = await gmail.users.messages.get({
-          auth,
-          userId: "me",
-          id: message.id,
-        }); 
-        //const threadId = message.data.threadId || null; // Use email.data.threadId if it exists, otherwise use null
+
+        const email = await fetchMail(gmail, auth, message.id);
         
         const threadId = message.threadId;
         console.log(threadId);
         
+        const replyTo = findReplyToAddress(email);
+        if (!replyTo) continue;
         const threadReplied = await hasThreadBeenReplied(gmail, threadId);    
         
         if (!threadReplied) {
+
+          //if Reply-to present then go for that.
+          //if only From then check for no-reply;
         
           // Extract relevant information
-          const from = email.data.payload.headers.find(header => header.name === 'From').value;
           const messageIdHeader = email.data.payload.headers.find(header => header.name === 'Message-ID');
           const messageId = messageIdHeader ? messageIdHeader.value : null;
           
@@ -41,7 +82,7 @@ const sendReply = async(auth)=>{
             userId: 'me',
             resource: {
                 raw: Buffer.from(
-                    `To: ${from}\n` +
+                    `To: ${replyTo}\n` +
                     `In-Reply-To: ${messageId}\n` +
                     `References: ${messageId}\n` +
                     `Subject: ${email.data.payload.headers.find(header => header.name === 'Subject').value}\n\n` +
@@ -65,4 +106,4 @@ const sendReply = async(auth)=>{
     }
   }
 
-  module.exports = sendReply;
+  module.exports = sendAutoReply;

@@ -7,9 +7,9 @@ This a feature is particularly useful if we are on a vacation or out of station 
 
 Improvements that I am working on:
 
-1. I have to add more functionalities like ignoring no-reply emails etc.
-2. I have to change labels for the auto-replied mails(Have to resolve some Permission Errors in this code).
-3. I have to replace setInterval with Webhooks to reduce API calls(At present, working on this....)
+1. I have to add more functionalities like ignoring no-reply emails etc..✅
+2. I have to change labels for the auto-replied mails(Have to resolve some Permission Errors in this code)✅.
+3. I have to replace setInterval with PUB/SUB to reduce the no. of API calls made(Need to verify my app in google cloud for this.)👩‍💻👩‍💻👩‍💻
 
 
 Live Demo Video Link: https://drive.google.com/file/d/14Vsr8a1ZzO9AFy9hJ6MA16xSz37KY57o/view?usp=sharing
